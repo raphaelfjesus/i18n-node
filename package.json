@@ -1,0 +1,48 @@
+{
+  "name": "i18n-node",
+  "version": "1.0.0",
+  "description": "I18n for Node.JS (easy to use, fast and no dependencies)",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/**/*.js",
+    "coverage": "istanbul cover _mocha -- -R spec ./test/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raphaelfjesus/i18n-node.git"
+  },
+  "keywords": [
+    "i18n",
+    "i10n",
+    "translate",
+    "translation",
+    "translator",
+    "pluralization",
+    "gender",
+    "simple",
+    "i18n-express",
+    "i18n-node"
+  ],
+  "author": "Raphael F. Jesus <raphaelfjesus@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/raphaelfjesus/i18n-node/issues"
+  },
+  "homepage": "https://github.com/raphaelfjesus/i18n-node#readme",
+  "engines": {
+    "node": ">=4.1.1"
+  },
+  "dependencies": {
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "codeclimate-test-reporter": "^0.3.1",
+    "cookie-parser": "^1.4.1",
+    "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "istanbul": "^0.4.2",
+    "mocha": "^2.4.5",
+    "sprintf-js": "^1.0.3"
+  }
+}
