@@ -38,7 +38,7 @@ var app = express();
 app.use(i18n({
   // urlTemplate: './locales/{locale}.json', // Default value
   // locales: true, // Default value (Detects all the locales from urlTemplate)
-  preferred: 'en-US' 
+  // preferred: 'en-US' // Default value
 }));
 
 app.get('/your-route', function (req, res) {
@@ -46,6 +46,29 @@ app.get('/your-route', function (req, res) {
 });
 
 app.listen(3000);
+```
+
+Before demonstrating the methods of detection locale, create the following translation files:
+
+**./locales/en-us.json**
+```json
+{
+  "usage": "See how easy it is to detect the locale from the user request ({})."
+}
+```
+
+**./locales/pt-br.json**
+```json
+{
+  "usage": "Veja como é fácil detectar o locale a partir da requisição do usuário ({})."
+}
+```
+
+**./locales/es-es.json**
+```json
+{
+  "usage": "Vea lo fácil que es para detectar el lenguaje de la solicitud del usuario ({})."
+}
 ```
 
 Now look below the locale detection methods from the user request:
@@ -58,13 +81,13 @@ var i18n = require('i18n-node');
 
 var app = express();
 app.use(i18n({
-  preferred: 'en-US',
+  // preferred: 'en-US', // Default value
   localeFrom: 'subdomain' 
 }));
 
 // http://en-us.domain.com/your-route
 app.get('/your-route', function (req, res) {
-  res.send(req.i18n.get('text.usage', 'Subdomain'));
+  res.send(req.i18n.get('usage', 'Subdomain'));
 });
 
 app.listen(3000);
@@ -84,14 +107,14 @@ var i18n = require('i18n-node');
 
 var app = express();
 app.use(i18n({
-  preferred: 'en-US',
-  //queryName: 'yourQueryName', // Default value: lang
+  // preferred: 'en-US', // Default value
+  // queryName: 'yourQueryName', // Default value: lang
   localeFrom: 'query' 
 }));
 
 // http://localhost:3000/your-route?lang=en-US
 app.get('/your-route', function (req, res) {
-  res.send(req.i18n.get('text.usage', 'Query'));
+  res.send(req.i18n.get('usage', 'Query'));
 });
 
 app.listen(3000);
@@ -113,14 +136,14 @@ var i18n = require('i18n-node');
 var app = express();
 app.use(cookieParser());
 app.use(i18n({
-  preferred: 'en-US',
+  // preferred: 'en-US', // Default value
   cookieName: 'yourCookieName', 
   localeFrom: 'cookie'
 }));
 
 // http://localhost:3000/your-route
 app.get('/your-route', function (req, res) {
-  res.send(req.i18n.get('text.usage', 'Cookie'));
+  res.send(req.i18n.get('usage', 'Cookie'));
 });
 
 app.listen(3000);
@@ -147,7 +170,7 @@ app.use(session({
     cookie: { maxAge: 60000 }
 }));
 app.use(i18n({
-  preferred: 'en-US',
+  // preferred: 'en-US', // Default value
   sessionName: 'yourSessionName', 
   localeFrom: 'session' 
 }));
@@ -160,7 +183,7 @@ app.all('*', function(req, res, next) {
 
 // http://localhost:3000/your-route
 app.get('/your-route', function (req, res) {
-  res.send(req.i18n.get('text.usage', 'Session'));
+  res.send(req.i18n.get('usage', 'Session'));
 });
 
 app.listen(3000);
@@ -180,13 +203,13 @@ var i18n = require('i18n-node');
 
 var app = express();
 app.use(i18n({
-  preferred: 'en-US',
+  // preferred: 'en-US', // Default value
   localeFrom: 'header' 
 }));
 
 // http://localhost:3000/your-route
 app.get('/your-route', function (req, res) {
-  res.send(req.i18n.get('text.usage', 'Header[accept-language]'));
+  res.send(req.i18n.get('usage', 'Header[accept-language]'));
 });
 
 app.listen(3000);
@@ -208,14 +231,14 @@ var i18n = require('i18n-node');
 var app = express();
 app.use(cookieParser());
 app.use(i18n({
-  preferred: 'en-US',
+  // preferred: 'en-US', // Default value
   cookieName: 'yourCookieName', 
   localeFrom: 'query cookie header' 
 }));
 
 app.get('/your-route', function (req, res) {
   var from = req.query.lang ? 'Query' : (req.cookies && req.cookies['yourCookieName'] ? 'Cookie' : (req.headers && req.headers['accept-language'] ? 'Header' : 'Unknown'));
-  res.send(req.i18n.get('text.usage', from));
+  res.send(req.i18n.get('usage', from));
 });
 
 app.listen(3000);
@@ -263,11 +286,11 @@ var i18n = require('i18n-node')(
   // It indicates how locale is obtained from the user request, giving priority to the reported order.
   localeFrom: 'query header',
   
-  // Current locale, typically set automatically from the user's preferences logged in the application or from HTTP requests.
+  // Current locale, typically set automatically from the user's preferences logged in the application or from HTTP requests. (internal use)
   locale: undefined,
   
-  // Stores the parts of loaded translations when the option urlTemplate is set to use the pattern {part}.
-  parts: new Map(),
+  // Stores the parts of loaded translations when the option urlTemplate is set to use the pattern {part}. (internal use)
+  parts: new Map(), 
   
   // NNicknames to leave a better semantics in the code when translations keys are based on namespaces, e.g. i18n.error('required') or i18n.get('error.required').
   aliases: { error: 'error', warn: 'warn', success: 'success', info: 'info' },
@@ -302,7 +325,7 @@ var i18n = require('i18n-node')(
 For a better understanding of the syntax and options supported by this library, read this section and see all the possibilities offered in their use:
 
 - [`i18n.get(translationId, [options])`](#i18ngettranslationid-options)
-- [`i18n.setLocale(locale)`](#i18nsetlocale)
+- [`i18n.setLocale(locale)`](#i18nsetlocalelocale)
 - [`i18n.alias(name)`](#i18naliasname)
 
 #### `i18n.get(translationId, [options])`
@@ -323,12 +346,133 @@ Gets the corresponding translation to translation id.
 ##### Usage
 
 ```javascript
-var I18n = require('i18n-node').I18n;
-var i18n = new I18n({
+var vsprintf = require('sprintf-js').vsprintf;
+var i18n = require('i18n-node')({
   // preferred: 'en-US', // Default value
   fallbacks: {
     'ca': 'es-ES',
     'en': [ 'en-US', 'pt-BR' ]
+  },
+  // Not override the default interpolation
+  interpolator: function(translatedText, interpolationParameters) {
+    return (/%/).test(translatedText) ? vsprintf(translatedText, interpolationParameters) : translatedText;
+  },
+  // Only to facilitate the use of the method, add inline translations
+  translations: {
+    "en-us": {
+      "heading": "Demonstration of the use of I18n Node.JS library",
+      "text": {
+        "selectedRow": {
+          "zero": "No selected row",
+          "one": "1 selected row",
+          "other": "{{count}} selected rows"
+        },
+        "welcome": "Welcome, {}!",
+        "alphabet": "The first 4 letters of the english alphabet are: %s, %s, %s and %s",
+        "names": "%2$s, %3$s and %1$s",
+        "presentation": "My name is {} and I have {} children.",
+        "myName": "My name is {{firstname}}.",
+        "myFullname": "My full name is {{firstname}} {{lastname}}.",
+        "myDaughter": "My daughter's name is {{name}} and has only {{age}} years old.",
+        "myMarried": "My name is {} and I am married to {} lady."
+      },
+      "entry": {
+        "firstname": "Firstname",
+        "lastname": "Lastname" 
+      },
+      "error": {
+        "required": "This field is required",
+        "length": "Length must be between {} and {}",
+        "range": "Must be between {{min}} and {{max}}",
+        "maxLength": "Length must be no more than {}",
+        "maxPercentage": "Percentage must be no more than {{max}}"
+      },
+      "warn": {
+        "timeout": "Timeout"
+      },
+      "success": {
+        "save": "Successfully saved"
+      },
+      "info": {
+        "changelog": "Changelog"
+      }
+    },
+    "pt-br": {
+      "heading": "Demonstração do uso da biblioteca I18n Node.JS",
+      "text": {
+        "selectedRow": {
+          "zero": "Nenhuma linha selecionada",
+          "one": "1 linha selecionada",
+          "other": "{{count}} linhas selecionadas"
+        },
+        "welcome": "Seja bem-vindo, {}!",
+        "alphabet": "As primeiras 4 letras do alfabeto Inglês são: %s, %s, %s e %s",
+        "names": "%2$s, %3$s e %1$s",
+        "presentation": "Meu nome é {} e tenho {} filhos.",
+        "myName": "Meu nome é {{firstname}}.",
+        "myFullname": "Meu nome completo é {{firstname}} {{lastname}}.",
+        "myDaughter": "O nome da minha filha é {{name}} e tem apenas {{age}} anos de idade.",
+        "myMarried": "Meu nome é {} e sou casado com a senhora {}."
+      },
+      "entry": {
+        "firstname": "Nome",
+        "lastname": "Sobrenome" 
+      },
+      "error": {
+        "required": "Este campo é obrigatório",
+        "length": "O tamanho para este campo deve estar entre {} e {}",
+        "range": "O valor para este campo deve estar entre {{min}} e {{max}}",
+        "maxLength": "O tamanho máximo para este campo é {}",
+        "maxPercentage": "A porcentagem máxima para este campo é {{max}}"
+      },
+      "warn": {
+        "timeout": "Tempo expirado"
+      },
+      "success": {
+        "save": "Salvo com sucesso"
+      },
+      "info": {
+        "changelog": "Log de alterações"
+      }
+    },
+    "es-es": {
+      "heading": "La demostración de la utilización de la biblioteca I18n Node.JS",
+      "text": {
+        "selectedRow": {
+          "zero": "No hay filas seleccionadas",
+          "one": "1 fila seleccionada",
+          "other": "{{count}} líneas seleccionadas"
+        },
+        "welcome": "Bienvenido, {{}}!",
+        "alphabet": "Las 4 primeras letras del alfabeto inglés son: %s, %s, %s y %s",
+        "names": "%2$s, %3$s y %1$s",
+        "presentation": "Mi nombre es {} y tengo {} hijos.",
+        "myName": "Mi nombre es {{firstname}}.",
+        "myFullname": "Mi nombre completo es {{firstname}} {{lastname}}.",
+        "myDaughter": "El nombre de mi hija es {{name}} y tiene sólo {{age}} años.",
+        "myMarried": "Mi nombre es {} y estoy casada con {} dama."
+      },
+      "entry": {
+        "firstname": "Nombre",
+        "lastname": "Apellido" 
+      },
+      "error": {
+        "required": "Este campo es obligatorio",
+        "length": "El tamaño de este campo debe estar entre {} y {}",
+        "range": "El valor de este campo debe estar entre {{min}} y {{max}}",
+        "maxLength": "El tamaño máximo para este campo es {}",
+        "maxPercentage": "El porcentaje máximo para este campo es {{max}}"
+      },
+      "warn": {
+        "timeout": "Tiempo transcurrido"
+      },
+      "success": {
+        "save": "Se ha guardado correctamente"
+      },
+      "info": {
+        "changelog": "Cambio de registro"
+      }
+    }
   }
 });
   
@@ -339,21 +483,47 @@ i18n.get('heading', { $lang: 'pt-BR' }); // Demonstração do uso da biblioteca 
 i18n.get({ $id: 'entry.firstname' }); // Firstname
 i18n.get({ $id: 'entry.firstname' }, { $lang: 'pt-BR' }); // Nome
 
-i18n.get([ 'entry.firstname', 'entry.lastname' ]); // Lastname
-i18n.get([ 'entry.firstname', 'entry.lastname' ], { $lang: 'pt-BR' }); // Sobrenome
+i18n.get([ 'entry.firstname', 'entry.lastname' ]); // { 'entry.firstname': Firstname, 'entry.lastname': Lastname }
+i18n.get([ 'entry.firstname', 'entry.lastname' ], { $lang: 'pt-BR' }); // { 'entry.firstname': Nome, 'entry.lastname': Sobrenome }
 
 // Translation fallback
 i18n.get('entry.firstname', { $lang: 'ca' }); // Nombre
 i18n.get('entry.firstname', { $lang: 'en' }); // Firstname
 
 // Translation with default interpolation
+i18n.get('error.maxLength', 255); // Length must be no more than 255
+i18n.get('error.maxLength', 255, { $lang: 'pt-BR' }); // O tamanho máximo para este campo é 255
 i18n.get('error.length', 1, 255); // Length must be between 1 and 255
 i18n.get('error.length', 1, 255, { $lang: 'pt-BR' }); // O tamanho para este campo deve estar entre 1 e 255
 
+i18n.get('error.maxPercentage', { max: 50 }); // Percentage must be no more than 50
+i18n.get('error.maxPercentage', { max: 50 }, { $lang: 'pt-BR' }); // A porcentagem máxima para este campo é 50
 i18n.get('error.range', { min: 1, max: 999 }); // Must be between 1 and 999
 i18n.get('error.range', { min: 1, max: 999 }, { $lang: 'pt-BR' }); // O valor para este campo deve estar entre 1 e 999
 
-// Translation with default pluralization
+i18n.get('text.welcome', 'Raphael'); // Welcome, Raphael!
+i18n.get('text.welcome', 'Raphael', { $lang: 'pt-BR' }); // Seja bem-vindo, Raphael!
+i18n.get('text.myMarried', 'Raphael', 'Elizabeth'); // My name is Raphael and I am married to Elizabeth lady.
+i18n.get('text.myMarried', 'Raphael', 'Elizabeth', { $lang: 'pt-BR' }); // Meu nome é Raphael e sou casado com a senhora Elizabeth.          
+
+i18n.get('text.myName', { firstname: 'Raphael' }); // My name is Raphael.
+i18n.get('text.myName', { firstname: 'Raphael' }, { $lang: 'pt-BR' }); // Meu nome é Raphael.
+i18n.get('text.myFullname', { firstname: 'Raphael', lastname: 'Freitas' }); // My full name is Raphael Freitas.
+i18n.get('text.myFullname', { firstname: 'Raphael', lastname: 'Freitas' }, { $lang: 'pt-BR' }); // Meu nome completo é Raphael Freitas.
+
+i18n.get('text.presentation', 'Raphael', 2); // My name is Raphael and I have 2 children.
+i18n.get('text.presentation', 'Raphael', 2, { $lang: 'pt-BR' }); // Meu nome é Raphael e tenho 2 filhos.
+i18n.get("text.myDaughter", { name: 'Isabelle', age: 3 }); // My daughter's name is Isabelle and has only 3 years old.
+i18n.get("text.myDaughter", { name: 'Isabelle', age: 3 }, { $lang: 'pt-BR' }); // O nome da minha filha é Isabelle e tem apenas 3 anos de idade.    
+
+// Translation with custom interpolation
+i18n.get('text.alphabet', 'a', 'b', 'c', 'd'); // The first 4 letters of the english alphabet are: a, b, c and d
+i18n.get('text.alphabet', 'a', 'b', 'c', 'd', { $lang: 'pt-BR' }); // As primeiras 4 letras do alfabeto Inglês são: a, b, c e d
+
+i18n.get('text.names', 'Angelina Jolie', 'Megan Fox', 'Beyoncé'); // Megan Fox, Beyoncé and Angelina Jolie
+i18n.get('text.names', 'Angelina Jolie', 'Megan Fox', 'Beyoncé', { $lang: 'pt-BR' }); // Megan Fox, Beyoncé e Angelina Jolie          
+
+// Translation with default pluralization (property $count is required)
 i18n.get('text.selectedRow', { $count: 0 }); // No selected row
 i18n.get('text.selectedRow', { $count: 1 }); // 1 selected row
 i18n.get('text.selectedRow', { $count: 10 }); // 10 selected rows
@@ -362,21 +532,18 @@ i18n.get('text.selectedRow', { $count: 0, $lang: 'pt-BR' }); // Nenhuma linha se
 i18n.get('text.selectedRow', { $count: 1, $lang: 'pt-BR' }); // 1 linha selecionada
 i18n.get('text.selectedRow', { $count: 10, $lang: 'pt-BR' }); // 10 linhas selecionadas
 
-// Translation with default aliases
+// Translation with default aliases => e.g. i18n.error('required') equivalent to i18n.get('error.required')
 i18n.error('required'); // This field is required
-// Equivalent to i18n.get('error.required')
-
-i18n.error('length', 1, 255); // Length must be between 1 and 255
-// Equivalent to i18n.get('error.length', 1, 255)
+i18n.error('required', { $lang: 'pt-BR' }); // Este campo é obrigatório
 
 i18n.warn('timeout'); // Timeout
-// Equivalent to i18n.get('warn.timeout')
+i18n.warn('timeout', { $lang: 'pt-BR' }); // Tempo expirado
 
 i18n.success('save'); // Successfully saved
-// Equivalent to i18n.get('success.save')
+i18n.success('save', { $lang: 'pt-BR' }); // Salvo com sucesso
 
 i18n.info('changelog'); // Changelog
-// Equivalent to i18n.get('info.changelog')
+i18n.info('changelog', { $lang: 'pt-BR' }); // Log de alterações
 ```
 
 <hr>
@@ -387,9 +554,9 @@ Sets the locale to be used in translation.
 
 ##### Parameters
 
-| Param             | Type     | Details
-| ----------------- | -------- | ---------------------------------------------------------------------------------------
-| **locale**        | `String` | The locale to be used.
+| Param             | Type              | Details
+| ----------------- | ----------------- | ---------------------------------------------------------------------------------------
+| **locale**        | `String`          | The locale to be used.
 
 ##### Usage
 
@@ -405,22 +572,26 @@ Sets an alias for a translation namespace.
 
 ##### Parameters
 
-| Param           | Type            | Details
-| --------------- | --------------- | ---------------------------------------------------------------------------------------
-| **name**        | `String|Object` | The alias name to be used.
+| Param             | Type              | Details
+| ----------------- | ----------------- | ---------------------------------------------------------------------------------------
+| **name**          | `String | Object` | The alias name to be used.
 
 ##### Usage
 
 ```javascript
 i18n.alias('text');
+i18n.text('welcome', 'Raphael'); // Equivalent to i18n.get('text.welcome')
 
-i18n.text('welcome', 'Raphael'); // Welcome, Raphael!
-// Equivalent to i18n.get('text.welcome')
+i18n.alias({ label: 'entry' });
+i18n.label('firstname'); // Equivalent to i18n.get('entry.firstname')
+```
 
-i18n.alias({ entry: 'entry' });
-
-i18n.entry('firstname'); // Firstname
-// Equivalent to i18n.get('entry.firstname')
+> Default aliases can not be overwritten.
+```javascript
+i18n.error('required'); // Equivalent to i18n.get('error.required')
+i18n.warn('timeout'); // Equivalent to i18n.get('warn.timeout')
+i18n.success('save'); // Equivalent to i18n.get('success.save')
+i18n.info('changelog'); // Equivalent to i18n.get('info.changelog')
 ```
 
 ## Contributing
