@@ -1,10 +1,14 @@
 'use strict';
 
-var i18n = require('./lib/i18n-node');
+var I18n = require('./lib/i18n-node');
 
-module.exports = i18n;
+module.exports = function i18n(options) {
+  return function(req, res, next) {
+    req.i18n = new I18n(options);
+    req.i18n.setLocaleFromRequest(req);
+    
+    next();
+  };
+};
 
-// http://www.yiiframework.com/wiki/55/i18n-subdomains-and-url-rules/
-// https://github.com/mozilla/i18n-abide/blob/master/docs/API.md
-// https://github.com/akoenig/express-lingua
-// https://docs.omniref.com/js/npm/node-i18n/0.0.15 - Ideia para traduzir a rota, facil
+module.exports.I18n = I18n;

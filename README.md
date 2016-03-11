@@ -30,7 +30,7 @@ $ npm install i18n-node
 Minimum configuration for use with [Express](http://expressjs.com/):
 
 ```javascript
-// server.js
+// ./server.js
 var express = require('express');
 var i18n = require('i18n-node');
 

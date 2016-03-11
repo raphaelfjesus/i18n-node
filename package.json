@@ -1,7 +1,7 @@
 {
-  "name": "i18n-node",
+  "name": "i18n-node-simple",
   "version": "1.0.0",
-  "description": "I18n for Node.JS (easy to use, fast and no dependencies)",
+  "description": "Library for internationalization of applications developed in Node.JS. (Less than 150 lines of code)",
   "main": "index.js",
   "scripts": {
     "test": "mocha test/**/*.js",
@@ -33,6 +33,7 @@
     "node": ">=4.1.1"
   },
   "dependencies": {
+    "i18n-js-simple": "^0.1.0",
     "path": "^0.12.7"
   },
   "devDependencies": {
@@ -43,6 +44,7 @@
     "express-session": "^1.13.0",
     "istanbul": "^0.4.2",
     "mocha": "^2.4.5",
+    "should": "^8.2.2",
     "sprintf-js": "^1.0.3"
   }
 }
