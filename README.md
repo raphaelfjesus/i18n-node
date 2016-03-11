@@ -50,21 +50,21 @@ app.listen(3000);
 
 Before demonstrating the methods of detection locale, create the following translation files:
 
-**./locales/en-us.json**
+**./locales/en-US.json**
 ```json
 {
   "usage": "See how easy it is to detect the locale from the user request ({})."
 }
 ```
 
-**./locales/pt-br.json**
+**./locales/pt-BR.json**
 ```json
 {
   "usage": "Veja como é fácil detectar o locale a partir da requisição do usuário ({})."
 }
 ```
 
-**./locales/es-es.json**
+**./locales/es-ES.json**
 ```json
 {
   "usage": "Vea lo fácil que es para detectar el lenguaje de la solicitud del usuario ({})."
@@ -152,7 +152,7 @@ app.listen(3000);
 response with [curl](https://curl.haxx.se/):
 
 ```bash
-curl -v --cookie "yourCookieName=pt-BR" http://localhost:3000/your-route
+curl -v --cookie "yourCookieName=es-ES" http://localhost:3000/your-route
 ```
 
 **From session**

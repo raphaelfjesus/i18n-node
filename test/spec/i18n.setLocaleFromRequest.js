@@ -21,7 +21,7 @@ describe('I18n#setLocaleFromRequest()', function() {
       let req = { headers: { host: 'en-us.domain.com' } };
       let locale = i18n.setLocaleFromRequest(req);
       
-      expect(locale).to.equal('en-us');
+      expect(locale).to.equal('en-US');
       
       done();
     });

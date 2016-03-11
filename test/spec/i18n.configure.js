@@ -22,7 +22,7 @@ describe('I18n#configure()', function() {
     expect(i18n.cookieName).to.equal('i18nLocale');
     expect(i18n.sessionName).to.equal('i18nLocale');
     expect(i18n.load).to.be.instanceof(Function);
-    expect(i18n.locales).to.eql([ 'en-US', 'es-ES', 'fr', 'pt-BR' ]);
+    expect(i18n.locales).to.eql([ 'en-US', 'es-ES', 'pt-BR' ]);
     
     done();
   });
